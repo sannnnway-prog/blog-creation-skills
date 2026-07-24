@@ -1,6 +1,6 @@
 ---
 name: article-optimization-collab
-description: Use whenever the user is optimizing, refreshing, rewriting, auditing, consolidating, testing, screenshotting, publishing, or correcting an SEO/content workflow. Trigger broadly for Chinese or English requests like "优化这篇", "改这篇文章", "下一篇", "开始优化", "按记忆来", "按之前的方式", "用项目记忆", "降AI感", "加实测", "加内链", "加FAQ", "Meta Description", "元描述", "提升点击率", "处理截图", "WordPress复制", "SEO操作台", "复盘", "GSC我打开了", "Chrome我打开了", "Google Trends", "你自己去测", "自己截图", "以后按这个规则", "记住这个要求", "写进skill", "更新skill", "为什么没按skill", "有的对话不按这个skill", or similar article-work and workflow-correction phrasing. Covers live-source inspection, preservation-first editing, current-model and tracking-link synchronization, official-vs-user data precedence, evidence collection, CTR-focused metadata, internal links, WordPress HTML plus SEO workbench, FAQ/schema, publish QA, immediate correction capture, and project/global skill synchronization.
+description: Use whenever the user is optimizing, refreshing, rewriting, auditing, consolidating, testing, screenshotting, publishing, uploading article media to OMS, inserting WebP/MP4 URLs into WordPress, or correcting an SEO/content workflow. Trigger broadly for Chinese or English requests like "优化这篇", "改这篇文章", "下一篇", "开始优化", "按记忆来", "按之前的方式", "用项目记忆", "降AI感", "加实测", "加内链", "加FAQ", "Meta Description", "元描述", "提升点击率", "处理截图", "WordPress复制", "SEO操作台", "复盘", "GSC我打开了", "Chrome我打开了", "Google Trends", "你自己去测", "自己截图", "以后按这个规则", "记住这个要求", "写进skill", "更新skill", "为什么没按skill", "有的对话不按这个skill", or similar article-work and workflow-correction phrasing. Covers live-source inspection, preservation-first editing, current-model and tracking-link synchronization, official-vs-user data precedence, evidence collection, CTR-focused metadata, internal links, verified OMS media insertion, WordPress HTML plus SEO workbench, FAQ/schema, publish QA, immediate correction capture, and project/global skill synchronization.
 ---
 
 # Article Optimization Collab
@@ -276,10 +276,10 @@ Do not collapse all article work into one execution. Identify the current phase 
    Use when the user asks to review a page, judge whether proposed changes are reasonable, check GSC, check Google Trends, assess SEO logic, or "给我说说计划". Output: loaded memory, article diagnosis, GSC/current-status findings when requested, Google Trends signals when relevant, SEO rationale, proposed section changes, test/screenshot suggestions, evidence plan, delivery format proposal, and the next-step confirmation question. Do not create final article copy as the main deliverable.
 2. **Phase 2: Test and Screenshot Matrix**  
    Use after the plan is accepted or when the user asks for real tests/screenshots. Output: test dimensions designed from search intent and model/product characteristics, where to test, prompts, official URLs to capture, filenames, alt text, captions, insertion points, priority, and status. Do not claim screenshots exist until the user provides them or explicitly asks the agent to capture/process them.
-3. **Phase 3: Image Processing**  
-   Use after screenshots are provided or captured. Output: processed WebP files, names, dimensions/crop notes, folder path, and image insertion map. Tool capability checks such as WebP converter probing are internal; do not present them as a major user-facing progress update unless they block the task.
+3. **Phase 3: Media Processing and OMS Upload**  
+   Use after images/screenshots/videos are provided, generated, or captured. Convert selected images and screenshots to WebP, keep or transcode selected videos to MP4, upload final files through `https://oms.broly.ai/seoManage/upload`, capture and verify the exact returned public URLs, and update the media insertion map. Use the Chrome extension backend and DOM/file-input operations for OMS; never use the in-app browser or fabricate predictable static URLs. Tool capability checks are internal; report only processed files, dimensions/crop/size notes, OMS URLs, status, and blockers.
 4. **Phase 4: Article Copy Package**  
-   Use after the content direction and evidence plan are confirmed. Output: WordPress-copyable HTML or section-level HTML replacement blocks with Chinese editor markers, internal-link table, FAQ, source notes, and image placeholders.
+   Use after the content direction and evidence plan are confirmed. Output: WordPress-copyable HTML or section-level HTML replacement blocks with Chinese editor markers, internal-link table, FAQ, source notes, and native Gutenberg image/video blocks populated with verified OMS URLs. Use placeholders only for explicitly blocked or unfinished media and mark the package incomplete.
 5. **Phase 5: Publish QA and Retro**  
    Use after the copy package exists. Output: final QA, missing assets, publication checklist, and memory updates.
 
@@ -340,6 +340,7 @@ When the user needs to manually copy optimized content into WordPress, prefer a 
 - When creating a full article optimization handoff, prefer a browser-friendly copy workbench: yellow Chinese editor notes, white copy/replacement boxes, SEO/source notes, image cards, internal-link table, and publish QA helpers. For existing articles, include what to keep, replace, move, delete, or insert.
 - For partial edits, give `Ctrl+F` anchors plus the replacement HTML block.
 - For image-heavy sections, pair each image with filename, alt text, insertion point, and the paragraph it supports.
+- For every generated or captured image selected for publication, convert it to WebP and upload it to OMS before final WordPress delivery. Keep selected videos as MP4 and upload them to OMS. Replace local paths and placeholders in both body HTML and Gutenberg source with the exact verified OMS URLs so the user does not need to insert media manually.
 - For internal links, provide both the linked HTML in context and a separate copy table.
 - For long optimized articles, include a WordPress TOC/anchor module when useful: a copyable directory, each H2's `HTML anchor` value, and matching `#anchor` links. Remind that the heading block's HTML anchor omits `#`, while TOC links include `#`.
 - For full/pure article HTML, include the TOC inside the public article body and add H2 `id` attributes directly in the HTML. Also provide a separate editor-facing anchor map so the user can recreate Gutenberg heading anchors if needed.
@@ -480,8 +481,12 @@ When a user marks copy or a workbench section as `Kept Strong Claims`, treat tho
 For screenshot work:
 
 - Create descriptive, short filenames.
-- Convert to WebP when requested.
+- Convert every generated image and captured screenshot selected for publication to WebP by default.
 - Use WebP lossless for text-heavy screenshots when image clarity matters.
+- Keep selected videos as MP4; transcode other source formats when needed, preferring broadly playable H.264/AAC while preserving clarity.
+- Upload final WebP/MP4 assets through `https://oms.broly.ai/seoManage/upload` with the Chrome extension backend and DOM/file-input operations. Capture the exact URL returned/displayed by OMS and verify the URL serves the expected media type. Never infer the URL from its filename.
+- Insert verified OMS URLs into clean article HTML and independent native Gutenberg `wp:image` / `wp:video` blocks. Keep media and surrounding paragraphs separately editable after switching back to Visual Editor.
+- A final package fails media QA if required rows are not uploaded, URL-verified, and inserted, or if publishable code contains local paths, `file:///`, temporary URLs, empty `src`, or planned-media tokens.
 - Use 16:9 cropping only when requested or when consistency matters.
 - Keep hands-on output screenshots separate from official proof/documentation screenshots.
 - Provide image alt text and insertion location outside the public paragraph.
@@ -489,7 +494,7 @@ For screenshot work:
 - When official screenshots are needed, give the URL and exact area to capture, preferably in the same order the images will appear in the article.
 - Official/evidence screenshot plans must include URL, page/source title, Command+F locator text, exact area to capture, claim supported, filename, alt text, caption, and insertion point. A URL alone is not enough.
 - Screenshot matrices should track status: planned, captured, processed, inserted, or skipped with reason.
-- After processing screenshots, create or update an image asset index for evidence-heavy articles. Include filename, dimensions, type, source, alt text, caption, insertion point, and required/optional status.
+- After processing media, create or update an OMS media index for evidence-heavy articles. Include filename, local path, dimensions/file size, type, source, alt text, caption, insertion point, exact OMS URL, upload status, URL-verification status, WP-insertion status, and required/optional status.
 - Before using processed images in article HTML, verify referenced files exist locally.
 - If creating an HTML data card or proof card, remove generation notes, implementation hints, placeholder labels, or tiny meta text that could expose the artifact as internal work.
 
